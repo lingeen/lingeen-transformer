@@ -15,10 +15,8 @@ from decoder.DecoderLayer import DecoderLayer
 from input.Input import Input
 from output.Output import Output
 import torch
-from torch.autograd import Variable
 import numpy as np
 
-import matplotlib.pyplot as plt
 
 def subsequent_mask(size):
 
@@ -92,5 +90,3 @@ if __name__ == '__main__':
 
     result=transformer(source_input,target_input,source_mask,target_mask)
 
-    print(result)
-    print(result.size())

@@ -33,8 +33,6 @@ class EncoderLayer(nn.Module):
 
 
     def forward(self,input,mask):
-        print(input.size())
-        print(mask.size())
 
         # torch.Size([1, 5, 512])
         # torch.Size([8, 5, 5])
