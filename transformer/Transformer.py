@@ -16,7 +16,17 @@ from input.Input import Input
 from output.Output import Output
 import torch
 from torch.autograd import Variable
+import numpy as np
 
+import matplotlib.pyplot as plt
+
+def subsequent_mask(size):
+
+    mask_shape=(1,size,size)
+
+    temp_matrix=np.triu(np.ones(mask_shape),k=1).astype('uint8')
+
+    return torch.from_numpy(1-temp_matrix)
 
 
 class Transformer(nn.Module):
@@ -65,18 +75,20 @@ class Transformer(nn.Module):
         return output
 
 if __name__ == '__main__':
-    source_vocab_size=11
-    target_vocab_size=11
+    source_vocab_size=10
+    target_vocab_size=10
+    embedding_dim=512
     head_num=8
-    source_input=torch.LongTensor()
-    transformer=Transformer(source_vocab_size=source_vocab_size,target_vocab_size=target_vocab_size)
+    transformer=Transformer(source_vocab_size=source_vocab_size,target_vocab_size=target_vocab_size,embedding_dim=embedding_dim,head_num=head_num)
 
     # source_input, target_input, source_mask, target_mask
     source_input=torch.LongTensor([[1,2,3,4,5]])
     target_input=torch.LongTensor([[1,2,3,4,5]])
 
-    source_mask=Variable(torch.zeros(head_num,5,5))
-    target_mask=Variable(torch.zeros(head_num,5,5))
+    # source_mask=Variable(torch.zeros(head_num,5,5))
+    source_mask=subsequent_mask(5)
+    target_mask=subsequent_mask(5)
+
 
     result=transformer(source_input,target_input,source_mask,target_mask)
 

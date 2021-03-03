@@ -14,7 +14,6 @@ class Embedding(nn.Module):
 
 
     def forward(self,input):
-
         return self.embedding(input)*math.sqrt(self.embedding_dim)
 
 

@@ -24,11 +24,10 @@ def attention(query,key,value,mask=None,drop_out=None):
     embedding_dim=query.size(-1)
     # 1.q*kt / dim >softmax>*v
     scores=torch.matmul(query,key.transpose(-2,-1))/math.sqrt(embedding_dim)
-
     # 2.scores使用mask
     if mask is not None:
         # mask盖住scores>太小就不可能被选中
-        scores.masked_fill(mask==0,-1e9)
+        scores=scores.masked_fill(mask==0,value=-1e9)
 
     # 3.scores>softmax
     attention_weight=F.softmax(scores,dim=-1)
@@ -47,7 +46,8 @@ class MultiHeadedAttention(nn.Module):
     def __init__(self,head_num,embedding_dim,drop_out_ratio=0.1):
         super(MultiHeadedAttention,self).__init__()
         # 确认词可被整分
-        assert embedding_dim%head_num==0,"embedding_dim不能被传入的head_num整除"
+
+        assert embedding_dim % head_num == 0,"embedding_dim不能被传入的head_num整除"
 
         self.head_dim=embedding_dim//head_num
 
@@ -89,21 +89,8 @@ class MultiHeadedAttention(nn.Module):
         return self.linears[-1](attention_result)
 
 
-if __name__ == '__main__':
-    head_num=8
-    embedding_dim=512
-    drop_out_ratio=0.2
 
-    attention_layer=MultiHeadedAttention(head_num,embedding_dim,drop_out_ratio)
 
-    input=Variable(torch.randn(1,5,embedding_dim))
-
-    mask=Variable(torch.zeros(head_num,5,5))
-
-    attention_result=attention_layer(input,input,input,mask=mask)
-
-    print(attention_result)
-    print(attention_result.size())
 
 
 

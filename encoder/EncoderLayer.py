@@ -33,6 +33,11 @@ class EncoderLayer(nn.Module):
 
 
     def forward(self,input,mask):
+        print(input.size())
+        print(mask.size())
+
+        # torch.Size([1, 5, 512])
+        # torch.Size([8, 5, 5])
 
         input=self.sublayer_connection_layers[0](input,lambda x:self.attention_layer(x,x,x,mask))
 
